@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏒 Fantasy Hockey AI</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header>
+    <h1>🏒 Fantasy Hockey AI</h1>
+    <button id="configBtn" class="btn-ghost">⚙ Configure League</button>
+  </header>
+
+  <!-- Config Modal -->
+  <div id="configModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Connect Your Fantrax League</h2>
+
+      <div class="instructions">
+        <strong>How to get your credentials:</strong><br>
+        1. Log in to <strong>fantrax.com</strong> in your browser<br>
+        2. Open DevTools → <code>Application</code> → <code>Cookies</code> → <code>www.fantrax.com</code><br>
+        3. Copy the value of <code>fantrax.st</code> — that's your session token<br>
+        4. Your <strong>League ID</strong> is in the URL: <code>fantrax.com/fantasy/league/<em>LEAGUE_ID</em>/...</code><br>
+        5. Your <strong>Team ID</strong> is in the URL when viewing your team page
+      </div>
+
+      <div class="form-group">
+        <label>League ID</label>
+        <input id="leagueId" type="text" placeholder="e.g. a1b2c3d4e5f6g7h8">
+      </div>
+      <div class="form-group">
+        <label>Team ID</label>
+        <input id="teamId" type="text" placeholder="Your team ID from the URL">
+      </div>
+      <div class="form-group">
+        <label>Session Token (fantrax.st cookie)</label>
+        <input id="sessionToken" type="password" placeholder="Paste your fantrax.st cookie value">
+      </div>
+
+      <div class="modal-actions">
+        <button id="saveConfig" class="btn-primary">Save &amp; Connect</button>
+        <button id="cancelConfig" class="btn-ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="content">
+
+    <!-- Not configured -->
+    <div id="notConfigured" class="empty-state">
+      <div class="empty-icon">🏒</div>
+      <h2>Connect Your Fantrax League</h2>
+      <p>Configure your league credentials to get AI-powered roster analysis, waiver wire picks, and trade advice.</p>
+      <button class="btn-primary" onclick="document.getElementById('configBtn').click()">Get Started</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="hidden">
+
+      <nav class="tabs">
+        <button class="tab active" data-tab="ai">🤖 AI Recommendations</button>
+        <button class="tab" data-tab="roster">👥 My Roster</button>
+        <button class="tab" data-tab="waiver">📋 Waiver Wire</button>
+        <button class="tab" data-tab="standings">🏆 Standings</button>
+      </nav>
+
+      <!-- AI tab -->
+      <div id="tab-ai" class="tab-content active">
+        <div class="rec-controls">
+          <select id="recType">
+            <option value="general">🔍 Full Team Analysis</option>
+            <option value="waiver">➕ Waiver Wire Recommendations</option>
+            <option value="lineup">📋 Lineup Optimization</option>
+            <option value="trade">🔄 Trade Analysis</option>
+          </select>
+          <div id="tradeInputWrapper" class="hidden">
+            <textarea id="tradeDetails" placeholder="Describe the trade — e.g. 'I give: Auston Matthews. I receive: Nathan MacKinnon + Filip Forsberg'"></textarea>
+          </div>
+          <button id="getRecommendations" class="btn-primary">⚡ Get AI Analysis</button>
+        </div>
+
+        <div id="aiLoading" class="loading hidden">
+          <div class="spinner"></div>
+          <span>AI is analysing your team…</span>
+        </div>
+
+        <div id="aiOutput" class="ai-output hidden">
+          <div id="aiContent" class="markdown-body"></div>
+        </div>
+      </div>
+
+      <!-- Roster tab -->
+      <div id="tab-roster" class="tab-content hidden">
+        <div class="tab-header">
+          <h2>My Roster</h2>
+          <button id="refreshRoster" class="btn-ghost">↻ Refresh</button>
+        </div>
+        <div id="rosterContent" class="data-container">
+          <p class="loading-inline">Click Refresh to load your roster.</p>
+        </div>
+      </div>
+
+      <!-- Waiver tab -->
+      <div id="tab-waiver" class="tab-content hidden">
+        <div class="tab-header">
+          <h2>Waiver Wire — Top Available</h2>
+          <button id="refreshWaiver" class="btn-ghost">↻ Refresh</button>
+        </div>
+        <div id="waiverContent" class="data-container">
+          <p class="loading-inline">Click Refresh to load available players.</p>
+        </div>
+      </div>
+
+      <!-- Standings tab -->
+      <div id="tab-standings" class="tab-content hidden">
+        <div class="tab-header">
+          <h2>League Standings</h2>
+          <button id="refreshStandings" class="btn-ghost">↻ Refresh</button>
+        </div>
+        <div id="standingsContent" class="data-container">
+          <p class="loading-inline">Click Refresh to load standings.</p>
+        </div>
+      </div>
+
+    </div><!-- /dashboard -->
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<script src="/static/app.js"></script>
+</body>
+</html>
